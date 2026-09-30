@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>A Little Universe Made For You ✨</title>
+    <meta name="description" content="A personal, interactive digital universe created especially for your birthday.">
+
+    <!-- Google Fonts for cinematic elegance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Outfit:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Background Global Starfield Canvas -->
+    <canvas id="starfield-canvas" aria-hidden="true"></canvas>
+
+    <!-- Interactive Global Particle Canvas -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- Custom Cursor Glow (Desktop) -->
+    <div id="cursor-glow" class="cursor-glow" aria-hidden="true"></div>
+    <div id="cursor-dot" class="cursor-dot" aria-hidden="true"></div>
+
+    <!-- Ambient Vignette Overlay -->
+    <div class="vignette-overlay" aria-hidden="true"></div>
+    <div id="screen-darken-overlay" class="screen-darken-overlay" aria-hidden="true"></div>
+
+    <!-- Top Navigation / Universe Phase Tracker -->
+    <header id="universe-nav" class="universe-nav hidden" aria-label="Journey Progress">
+        <div class="nav-brand">✦ A Little Universe</div>
+        <div class="nav-steps" id="nav-steps-container">
+            <!-- Step indicators generated dynamically -->
+        </div>
+    </header>
+
+    <!-- Main Screens Container -->
+    <main id="app-container">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: OPENING / UNIVERSE               -->
+        <!-- ========================================== -->
+        <section id="screen-intro" class="screen-section active-screen" aria-label="Welcome Screen">
+            <div class="screen-content intro-content">
+                <div class="intro-badge">
+                    <span class="badge-sparkle">✦</span>
+                    <span class="badge-text">A Little Universe</span>
+                    <span class="badge-sparkle">✦</span>
+                </div>
+
+                <h1 id="intro-subtitle" class="intro-title">
+                    Someone special has a little surprise waiting...
+                </h1>
+
+                <p class="intro-caption">Take a deep breath, and step inside.</p>
+
+                <button id="btn-enter" class="glow-button btn-large" type="button"
+                    aria-label="Enter the surprise universe">
+                    <span class="btn-text">Enter ✨</span>
+                    <span class="btn-glow-ring"></span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: INTERACTIVE CONSTELLATION        -->
+        <!-- ========================================== -->
+        <section id="screen-constellation" class="screen-section" aria-label="Interactive Constellation">
+            <div class="section-header">
+                <span class="section-tag">Phase 01 &bull; Alignment</span>
+                <h2 class="section-title">Connect the Stars</h2>
+                <p class="section-desc">Look closely at the night sky. Tap the glowing stars to trace a celestial path.
+                </p>
+            </div>
+
+            <div class="constellation-wrapper">
+                <!-- Constellation Canvas Container -->
+                <div id="constellation-container" class="constellation-canvas-container">
+                    <canvas id="constellation-canvas"></canvas>
+                    <div id="constellation-star-layer" class="star-interactive-layer"></div>
+                </div>
+
+                <!-- Constellation Feedback / Progress -->
+                <div class="constellation-hud">
+                    <div class="progress-track" aria-label="Constellation Progress">
+                        <div id="constellation-progress-bar" class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <span id="constellation-counter" class="hud-text">0 / 8 stars aligned</span>
+                </div>
+
+                <!-- Constellation Completion Card -->
+                <div id="constellation-reveal-card" class="reveal-card hidden">
+                    <div class="reveal-inner">
+                        <span class="reveal-star-icon">✦ ✧ ✦</span>
+                        <h3 class="reveal-message">Today, this little universe is celebrating you.</h3>
+                        <h2 id="constellation-her-name" class="reveal-name">VAANI SREE✨</h2>
+                        <p class="reveal-sub">Go on...</p>
+                        <button id="btn-constellation-continue" class="glow-button btn-medium" type="button">
+                            <span>Continue ✨</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Secret Toast -->
+            <div id="secret-star-toast" class="whisper-toast hidden" role="alert">
+                <span class="whisper-icon">🌙</span>
+                <span class="whisper-text">You found something I didn't tell you about. 🌙</span>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 3: THE PHOTO REVEAL                 -->
+        <!-- ========================================== -->
+        <section id="screen-photo" class="screen-section" aria-label="Memory Photo Reveal">
+            <div class="section-header">
+                <span class="section-tag">Phase 02 &bull; Illumination</span>
+                <h2 class="section-title">There's something I wanted you to see...</h2>
+                <p class="section-desc">Move the little star across the stardust to reveal what lies beneath.</p>
+            </div>
+
+            <div class="photo-reveal-container">
+                <div id="photo-frame" class="photo-frame">
+                    <div class="photo-inner-wrapper" id="photo-inner-wrapper">
+                        <!-- Underlying Photo -->
+                        <img id="reveal-photo-img" src="assets/her-photo.jpg" alt="A special birthday portrait"
+                            class="reveal-photo" />
+
+                        <!-- Fallback Photo Placeholder -->
+                        <div id="photo-placeholder" class="photo-placeholder hidden">
+                            <div class="placeholder-art">
+                                <span class="placeholder-icon">✨</span>
+                                <p class="placeholder-title">A Radiant Soul</p>
+                                <p class="placeholder-note">A special memory just for you</p>
+                            </div>
+                        </div>
+
+                        <!-- Scratch Canvas Overlay -->
+                        <canvas id="photo-scratch-canvas" class="photo-scratch-canvas"></canvas>
+
+                        <!-- Glowing Star Dragger Cue -->
+                        <div id="dragger-cursor-cue" class="dragger-cue" aria-hidden="true">
+                            <span class="dragger-star">✦</span>
+                            <span class="dragger-pulse"></span>
+                        </div>
+                    </div>
+
+                    <!-- Revealing Progress HUD -->
+                    <div id="photo-reveal-hud" class="reveal-hud">
+                        <div class="reveal-hud-bar">
+                            <div id="photo-progress-fill" class="reveal-hud-fill"></div>
+                        </div>
+                        <span id="photo-progress-text" class="reveal-hud-text">Drag star across photo to reveal</span>
+                    </div>
+                </div>
+
+                <!-- Reveal Success Banner -->
+                <div id="photo-reveal-success" class="photo-success-banner hidden">
+                    <p class="photo-caption-text">One beautiful reason this day matters.</p>
+                    <p class="photo-tap-hint">Tap the photo to send a ripple of stardust ✨</p>
+                    <button id="btn-photo-continue" class="glow-button btn-medium" type="button">
+                        <span>Listen to a Melody ♫</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 4: THE MUSIC MOMENT                 -->
+        <!-- ========================================== -->
+        <section id="screen-music" class="screen-section" aria-label="Music Moment">
+            <div class="section-header">
+                <span class="section-tag">Phase 03 &bull; Harmony</span>
+                <h2 class="section-title">There's a song I picked for this moment...</h2>
+                <p class="section-desc">Press play, close your eyes, and listen to the celestial melody.</p>
+            </div>
+
+            <div class="music-player-card">
+                <div class="player-visualizer-container">
+                    <canvas id="music-visualizer-canvas" width="400" height="120"
+                        aria-label="Audio Visualizer"></canvas>
+                </div>
+
+                <div class="player-track-info">
+                    <span class="track-disc-icon">♫</span>
+                    <div class="track-details">
+                        <span id="track-title" class="track-name">Celestial Birthday Lullaby</span>
+                        <span id="track-artist" class="track-author">A melody for you</span>
+                    </div>
+                </div>
+
+                <!-- Custom Player Controls -->
+                <div class="player-controls-wrapper">
+                    <div class="player-progress-area">
+                        <span id="audio-current-time" class="time-label">0:00</span>
+                        <div id="audio-progress-bar" class="progress-bar-container" tabindex="0" role="slider"
+                            aria-label="Song progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div id="audio-progress-fill" class="progress-bar-fill"></div>
+                            <div id="audio-progress-thumb" class="progress-bar-thumb"></div>
+                        </div>
+                        <span id="audio-duration-time" class="time-label">0:28</span>
+                    </div>
+
+                    <div class="player-buttons">
+                        <!-- Decorative Prev Button -->
+                        <button id="btn-audio-prev" class="player-btn btn-secondary" type="button"
+                            aria-label="Previous track">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" />
+                            </svg>
+                        </button>
+
+                        <!-- Main Play / Pause Button -->
+                        <button id="btn-audio-play" class="player-btn btn-play" type="button"
+                            aria-label="Play or pause birthday song">
+                            <svg id="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <svg id="icon-pause" class="hidden" width="24" height="24" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                            </svg>
+                            <span class="btn-play-glow"></span>
+                        </button>
+
+                        <!-- Decorative Next Button -->
+                        <button id="btn-audio-next" class="player-btn btn-secondary" type="button"
+                            aria-label="Next track">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                            </svg>
+                        </button>
+
+                        <!-- Volume / Mute Toggle -->
+                        <div class="volume-container">
+                            <button id="btn-audio-mute" class="player-btn btn-small" type="button"
+                                aria-label="Toggle mute">
+                                <svg id="icon-volume-on" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                                </svg>
+                                <svg id="icon-volume-off" class="hidden" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z" />
+                                </svg>
+                            </button>
+                            <input id="audio-volume-slider" class="volume-slider" type="range" min="0" max="1"
+                                step="0.05" value="0.8" aria-label="Volume slider">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden Native Audio Element -->
+                <audio id="birthday-audio-element" preload="auto" src="assets/birthday-song.mp3"></audio>
+
+                <div class="music-action-footer">
+                    <button id="btn-music-continue" class="glow-button btn-medium" type="button">
+                        <span>Read Message Cards ✉</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 5: MEMORY / MESSAGE CARDS           -->
+        <!-- ========================================== -->
+        <section id="screen-cards" class="screen-section" aria-label="Memory and Wish Cards">
+            <div class="section-header">
+                <span class="section-tag">Phase 04 &bull; Something I wanna share..</span>
+                <h2 class="section-title"></h2>
+                <p class="section-desc">Tap any card to turn it over and read what was written in the stars.</p>
+            </div>
+
+            <div id="memory-cards-grid" class="cards-grid" role="list">
+                <!-- 5 Interactive 3D Flip Cards -->
+            </div>
+
+            <div class="section-footer-nav">
+                <button id="btn-cards-continue" class="glow-button btn-medium" type="button">
+                    <span>Follow the Journey ✦</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 6: INTERACTIVE TIMELINE             -->
+        <!-- ========================================== -->
+        <section id="screen-timeline" class="screen-section" aria-label="Journey Timeline">
+            <div class="section-header">
+                <span class="section-tag">Phase 05 &bull; Constellations of Time</span>
+                <h2 class="section-title">Little moments become memories.</h2>
+                <p class="section-desc">Each glowing point holds a memory. Tap to unfold them.</p>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-track-line" aria-hidden="true"></div>
+                <div id="timeline-list" class="timeline-items" role="list">
+                    <!-- Expandable Timeline Moments -->
+                </div>
+            </div>
+
+            <div class="section-footer-nav">
+                <button id="btn-timeline-continue" class="glow-button btn-medium" type="button">
+                    <span>To the Birthday Cake 🎂</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 7: THE BIRTHDAY CAKE & WISH         -->
+        <!-- ========================================== -->
+        <section id="screen-cake" class="screen-section" aria-label="Birthday Cake and Wish">
+            <div class="section-header">
+                <span class="section-tag">Phase 06 &bull; The Wish</span>
+                <h2 class="section-title">Make a wish ✨</h2>
+                <p class="section-desc">Close your eyes, make a silent wish, then tap or blow/swipe across the candle
+                    flame.</p>
+            </div>
+
+            <div class="cake-stage-container">
+                <!-- Pure HTML / CSS Birthday Cake -->
+                <div id="birthday-cake" class="birthday-cake" role="img" aria-label="Birthday Cake with glowing candle">
+
+                    <!-- Candle & Flame -->
+                    <div id="cake-candle" class="candle-wrapper">
+                        <!-- Flame -->
+                        <div id="candle-flame" class="candle-flame" tabindex="0" role="button"
+                            aria-label="Candle flame. Click or swipe to blow out.">
+                            <div class="flame-outer"></div>
+                            <div class="flame-inner"></div>
+                            <div class="flame-halo"></div>
+                        </div>
+
+                        <!-- Smoke trail -->
+                        <div id="candle-smoke" class="candle-smoke hidden" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                        </div>
+
+                        <!-- Candle Wick & Wax Body -->
+                        <div class="candle-wick"></div>
+                        <div class="candle-body">
+                            <div class="candle-stripes"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cake Top Tier -->
+                    <div class="cake-tier cake-tier-top">
+                        <div class="frosting-layer frosting-top">
+                            <div class="frosting-drip drip-1"></div>
+                            <div class="frosting-drip drip-2"></div>
+                            <div class="frosting-drip drip-3"></div>
+                        </div>
+                        <div class="cake-sponge">
+                            <div class="cake-cream-line"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cake Middle Tier -->
+                    <div class="cake-tier cake-tier-middle">
+                        <div class="frosting-layer frosting-middle">
+                            <div class="frosting-drip drip-4"></div>
+                            <div class="frosting-drip drip-5"></div>
+                            <div class="frosting-drip drip-6"></div>
+                            <div class="frosting-drip drip-7"></div>
+                        </div>
+                        <div class="cake-sponge">
+                            <div class="cake-cream-line"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cake Bottom Tier -->
+                    <div class="cake-tier cake-tier-bottom">
+                        <div class="frosting-layer frosting-bottom">
+                            <div class="frosting-drip drip-8"></div>
+                            <div class="frosting-drip drip-9"></div>
+                            <div class="frosting-drip drip-10"></div>
+                        </div>
+                        <div class="cake-sponge">
+                            <div class="cake-cream-line"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cake Stand / Plate -->
+                    <div class="cake-plate">
+                        <div class="plate-glow"></div>
+                    </div>
+                </div>
+
+                <!-- Wish Prompt Interaction Cue -->
+                <div id="cake-prompt-badge" class="cake-prompt-badge">
+                    <span class="prompt-icon">✧</span>
+                    <span class="prompt-text">Tap or swipe the flame</span>
+                    <span class="prompt-icon">✧</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- SCREEN 8: FINAL BIRTHDAY REVEAL            -->
+        <!-- ========================================== -->
+        <section id="screen-final" class="screen-section" aria-label="Final Birthday Message">
+
+            <!-- Hidden Secret Moon Easter Egg -->
+            <div id="easter-egg-moon" class="easter-egg-moon" tabindex="0" role="button"
+                aria-label="A mysterious crescent moon">
+                <span class="moon-glyph">🌙</span>
+                <span class="moon-halo"></span>
+            </div>
+
+            <div class="final-content-wrapper">
+
+                <div class="final-stars-burst" aria-hidden="true">✦ ✧ ✦</div>
+
+                <h1 class="final-heading">HAPPY BIRTHDAY</h1>
+
+                <h2 id="final-her-name" class="final-name-highlight">VAANI SREE✨</h2>
+
+                <p class="final-tagline">Some people deserve more than just a birthday wish.</p>
+
+                <!-- Final Letter Card -->
+                <div class="final-letter-card">
+                    <div class="card-starlight-border"></div>
+                    <div id="final-message-content" class="final-message-body">
+                        <!-- Filled dynamically from birthdayConfig.finalMessage -->
+                    </div>
+                </div>
+
+                <!-- Final Photo in Glowing Frame -->
+                <div class="final-photo-container">
+                    <div class="final-photo-frame">
+                        <img id="final-photo-img" src="assets/her-photo.jpg" alt="Portrait of the birthday girl"
+                            class="final-photo" />
+                        <div class="final-photo-border-glow"></div>
+                    </div>
+                    <p class="final-closing-note">Made with a little piece of my time, just for you.</p>
+                </div>
+
+                <!-- Continue to Final Interaction -->
+                <div class="final-action-wrapper">
+                    <button id="btn-final-continue" class="glow-button btn-large" type="button">
+                        <span>Continue ✨</span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- FINAL PHASE: A FINAL THOUGHT               -->
+        <!-- ========================================== -->
+        <section id="screen-question" class="screen-section" aria-label="A Final Moment">
+            <div class="final-question-stage">
+                <!-- Question & Buttons -->
+                <div id="question-box" class="question-box">
+                    <h2 class="question-heading">Did you smile? 😊</h2>
+                    <div class="question-btn-group">
+                        <button id="btn-question-yes" class="glow-button btn-medium btn-answer" type="button" aria-label="Yes">
+                            <span>YES</span>
+                        </button>
+                        <button id="btn-question-no" class="glow-button btn-medium btn-answer" type="button" aria-label="No">
+                            <span>NO</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reveal Envelope for YES -->
+                <div id="envelope-answer-yes" class="envelope-container hidden" aria-live="polite">
+                    <div class="envelope-wrapper">
+                        <!-- Top flap of the envelope -->
+                        <div class="envelope-flap-top">
+                            <div class="flap-triangle"></div>
+                        </div>
+                        
+                        <!-- The letter / message sheet sliding out and back in -->
+                        <div class="envelope-letter" id="envelope-letter">
+                            <div class="letter-content">
+                                <span class="letter-star-icon">✦</span>
+                                <p class="envelope-message-text">I owe you the smile that you always gave me.</p>
+                                <span class="letter-sparkle-sub">✨</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Front pocket folds of the envelope -->
+                        <div class="envelope-pocket">
+                            <div class="pocket-fold-left"></div>
+                            <div class="pocket-fold-right"></div>
+                            <div class="pocket-fold-bottom"></div>
+                        </div>
+
+                        <!-- Wax Seal / Confirmation Check Mark -->
+                        <div class="envelope-seal" id="envelope-seal" aria-hidden="true">
+                            <div class="seal-glow"></div>
+                            <div class="seal-icon">
+                                <svg class="check-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmation Status Text (Appears softly after seal) -->
+                    <div class="envelope-confirmation-note hidden" id="envelope-confirm-note">
+                        <span class="confirm-dot">✓</span>
+                        <span class="confirm-text">Received with warmth ✨</span>
+                    </div>
+                </div>
+
+                <!-- Reveal Card for NO -->
+                <div id="card-answer-no" class="question-reveal-card hidden">
+                    <p class="question-card-text">Then smile now,<br>The girl I knew looks beautiful when she smiles 😊</p>
+                </div>
+
+                <!-- Replay Action (Appears after card fades away) -->
+                <div id="question-replay-wrapper" class="replay-action-wrapper hidden">
+                    <button id="btn-replay-universe" class="glow-button btn-large replay-btn" type="button">
+                        <span class="btn-icon">↺</span>
+                        <span>Replay the experience</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- SECRET MOON MODAL (EASTER EGG)             -->
+    <!-- ========================================== -->
+    <div id="easter-egg-modal" class="easter-egg-modal hidden" role="dialog" aria-modal="true"
+        aria-labelledby="secret-modal-title">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button id="btn-close-secret" class="modal-close-btn" type="button"
+                aria-label="Close secret message">&times;</button>
+            <div class="modal-moon-icon">🌙</div>
+            <h3 id="secret-modal-title" class="secret-heading">P.S. You found the secret. 🌙</h3>
+            <p class="secret-subheading">Okay... maybe there was one more thing.</p>
+            <div id="secret-message-text" class="secret-body">
+                <!-- birthdayConfig.secretMessage -->
+            </div>
+            <button id="btn-secret-close-action" class="glow-button btn-small" type="button">
+                <span>Keep it in the stars ✨</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
