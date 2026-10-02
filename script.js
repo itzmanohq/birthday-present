@@ -1049,19 +1049,25 @@ function setupMusicPlayer(particleSys) {
         }
     });
 
+    function updateDurationDisplay() {
+        if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
+            durationTimeElem.textContent = formatTime(audio.duration);
+        }
+    }
+
     audio.addEventListener('timeupdate', () => {
-        if (audio.duration) {
+        if (audio.duration && !isNaN(audio.duration)) {
             const pct = (audio.currentTime / audio.duration) * 100;
             progressFill.style.width = `${pct}%`;
             progressThumb.style.left = `${pct}%`;
             currentTimeElem.textContent = formatTime(audio.currentTime);
-            durationTimeElem.textContent = formatTime(audio.duration);
+            updateDurationDisplay();
         }
     });
 
-    audio.addEventListener('loadedmetadata', () => {
-        durationTimeElem.textContent = formatTime(audio.duration);
-    });
+    audio.addEventListener('loadedmetadata', updateDurationDisplay);
+    audio.addEventListener('durationchange', updateDurationDisplay);
+    audio.addEventListener('canplay', updateDurationDisplay);
 
     audio.addEventListener('ended', () => {
         updatePlayState(false);
